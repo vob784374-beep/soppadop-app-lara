@@ -1,0 +1,31 @@
+# Secrets — never bake into image layers
+.env
+.env.*
+!.env.example
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (re-installed inside image)
+vendor
+
+# Laravel cached bootstrap files (regenerated at container start via entrypoint)
+bootstrap/cache
+
+# Test artifacts
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Logs and local storage
+storage/logs
+storage/framework/sessions
+storage/framework/cache
+storage/framework/views
+
+# Dev tooling
+*.md
+!README.md
+.editorconfig

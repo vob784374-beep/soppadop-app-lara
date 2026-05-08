@@ -1,0 +1,114 @@
+# generated: 2026-04-26
+# last_updated: 2026-04-30 (Change E: Epic 4 added)
+# project: app
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+#
+# ⚠️ DISCOVERY NOTE (2026-04-30):
+# ================================
+# Pre-existing backend implementation detected beyond Epic 1 scope:
+#   - AuthController, AuthService, JwtService (JWT-based, not Sanctum)
+#   - ProfileController, ProfileService
+#   - ItemController, ItemService
+#   - LMS controllers: Course, Lesson, Assignment, Submission, Enrollment
+#   - RBAC/ABAC: AuthorizationService, AbacChecker, RbacChecker
+#   - 44 passing tests / 124 assertions (including auth flow + unit tests)
+# Story statuses below reflect the tracking system (story file existence).
+# Run correct-course workflow to reconcile implementation vs. plan before
+# marking any Epic 2/3 stories as done.
+
+generated: 2026-04-26
+last_updated: 2026-04-30
+project: app
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # ─────────────────────────────────────────────────────────
+  # Epic 1: Platform Foundation & Infrastructure
+  # ─────────────────────────────────────────────────────────
+  epic-1: done
+  1-1-initialize-laravel-backend-project: done
+  1-2-initialize-nextjs-frontend-project: done
+  1-3-docker-compose-nginx-orchestration: done
+  1-4-database-migrations-schema-foundation: done
+  1-5-redis-cache-queue-configuration: done
+  1-6-api-foundation-envelope-exception-handler-repository-pattern: done
+  1-7-frontend-foundation-api-client-query-client-state-management: done
+  1-8-observability-sentry-structured-logging: done
+  epic-1-retrospective: done
+
+  # ─────────────────────────────────────────────────────────
+  # Epic 2: User Identity & Account Management
+  # ─────────────────────────────────────────────────────────
+  # ✅ Stories 2-1, 2-3, 2-4, 2-5 verified against pre-existing JWT implementation — done.
+  # ❌ Stories 2-2 (email verification), 2-6, 2-7 (UI) — not yet implemented.
+  epic-2: in-progress
+  2-1-user-registration-api: done
+  2-2-email-verification: backlog
+  2-3-user-login-logout-api: done
+  2-4-password-reset-api: done
+  2-5-profile-management-api: done
+  2-6-authentication-ui-register-login-password-reset: backlog
+  2-7-profile-management-ui: backlog
+  epic-2-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────
+  # Epic 3: Core Item Management
+  # ─────────────────────────────────────────────────────────
+  # ⚠️ Pre-existing code detected for 3-1 through 3-2 (ItemController, ItemService).
+  # Requires correct-course assessment before story files are created.
+  epic-3: backlog
+  3-1-items-crud-api: backlog
+  3-2-items-list-api-with-pagination-filtering: backlog
+  3-3-item-management-ui-crud: backlog
+  3-4-item-list-ui-with-pagination-filtering: backlog
+  epic-3-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────
+  # Epic 4: IELTS LMS Domain
+  # ─────────────────────────────────────────────────────────
+  # ⚠️ Pre-existing code detected: Course, Lesson, Assignment, Submission, Enrollment
+  # controllers + RBAC/ABAC (AuthorizationService, AbacChecker, RbacChecker) built
+  # and partially tested. Story 4.7 (JWT SOLID gaps) must be completed first.
+  # ✅ Story 4-7 done. Stories 4-1 through 4-6: implementation pre-exists, tests pending.
+  epic-4: in-progress
+  4-1-rbac-abac-foundation-roles-permissions-seeder: in-progress
+  4-2-courses-api-crud-rbac: in-progress
+  4-3-lessons-api-crud-rbac-abac: in-progress
+  4-4-assignments-api-crud-rbac-abac: in-progress
+  4-5-submissions-api-rbac-abac: in-progress
+  4-6-enrollments-api-rbac-abac: in-progress
+  4-7-jwt-gap-closure-solid-compliance: done
+  epic-4-retrospective: optional

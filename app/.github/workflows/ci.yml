@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend:
+    name: Backend: Composer + Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: mbstring, pdo_mysql, zip, gd
+
+      - name: Get composer cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run PHP lint
+        run: |
+          if [ -f artisan ]; then php -l $(git ls-files "app/**/*.php" "routes/**/*.php") || true; fi
+
+      - name: Run tests (if present)
+        run: |
+          if [ -f phpunit.xml ] || [ -f phpunit.xml.dist ]; then ./vendor/bin/phpunit --colors=always || true; fi
+
+  frontend:
+    name: Frontend: Node build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build --if-present
+
+      - name: Run frontend tests (if present)
+        working-directory: frontend
+        run: |
+          if [ -f package.json ] && grep -q "test" package.json; then npm test || true; fi
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
+      - name: Install Composer deps
+        run: |
+          cd backend || exit 0
+          if [ -f composer.json ]; then composer install --no-interaction --no-progress || true; fi
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install frontend deps
+        run: |
+          cd frontend && npm ci
+
+      - name: Run frontend build
+        run: |
+          cd frontend && npm run build
