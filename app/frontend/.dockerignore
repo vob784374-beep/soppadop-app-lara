@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next.js build output
+.next
+
+# Environment secrets
+.env.local
+.env*.local
+.env.production
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dev tooling and docs
+*.md
+!README.md
+.editorconfig
